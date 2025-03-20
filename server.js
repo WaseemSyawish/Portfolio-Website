@@ -46,7 +46,6 @@ app.post('/api/portfolio', async (req, res) => {
     }
 });
 
-// Define Resume Schema
 const resumeSchema = new mongoose.Schema({
     type: { type: String, required: true },
     title: { type: String, required: true },
@@ -62,7 +61,6 @@ const resumeSchema = new mongoose.Schema({
 
 const Resume = mongoose.model('Resume', resumeSchema);
 
-// Define User Schema (for admin access)
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -73,8 +71,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// API Routes
-// Get all portfolio items
 app.get('/api/portfolio', async (req, res) => {
     try {
         const portfolioItems = await Portfolio.find().sort({ createdAt: -1 });
@@ -84,7 +80,6 @@ app.get('/api/portfolio', async (req, res) => {
     }
 }); 
 
-// Get portfolio items by category
 app.get('/api/portfolio/category/:category', async (req, res) => {
     try {
         const portfolioItems = await Portfolio.find({ 
@@ -96,7 +91,6 @@ app.get('/api/portfolio/category/:category', async (req, res) => {
     }
 });
 
-// Create a new portfolio item (protected route)
 app.post('/api/portfolio', async (req, res) => {
     try {
         const newPortfolioItem = new Portfolio(req.body);
@@ -107,7 +101,6 @@ app.post('/api/portfolio', async (req, res) => {
     }
 });
 
-// Update portfolio item (protected route)
 app.put('/api/portfolio/:id', async (req, res) => {
     try {
         const updatedPortfolioItem = await Portfolio.findByIdAndUpdate(
@@ -124,7 +117,6 @@ app.put('/api/portfolio/:id', async (req, res) => {
     }
 });
 
-// Delete portfolio item (protected route)
 app.delete('/api/portfolio/:id', async (req, res) => {
     try {
         const deletedPortfolioItem = await Portfolio.findByIdAndDelete(req.params.id);
@@ -137,7 +129,6 @@ app.delete('/api/portfolio/:id', async (req, res) => {
     }
 });
 
-// Get resume items
 app.get('/api/resume/:type', async (req, res) => {
     try {
         const resumeItems = await Resume.find({ 
@@ -149,7 +140,6 @@ app.get('/api/resume/:type', async (req, res) => {
     }
 });
 
-// Create resume item (protected route)
 app.post('/api/resume', async (req, res) => {
     try {
         const newResumeItem = new Resume(req.body);
@@ -160,7 +150,6 @@ app.post('/api/resume', async (req, res) => {
     }
 });
 
-// Update resume item (protected route)
 app.put('/api/resume/:id', async (req, res) => {
     try {
         const updatedResumeItem = await Resume.findByIdAndUpdate(
@@ -177,7 +166,6 @@ app.put('/api/resume/:id', async (req, res) => {
     }
 });
 
-// Delete resume item (protected route)
 app.delete('/api/resume/:id', async (req, res) => {
     try {
         const deletedResumeItem = await Resume.findByIdAndDelete(req.params.id);
@@ -190,12 +178,10 @@ app.delete('/api/resume/:id', async (req, res) => {
     }
 });
 
-// Contact form submission
 app.post('/api/contact', async (req, res) => {
     try {
         const { name, email, subject, message } = req.body;
-        
-        // Configure email transporter
+
         const transporter = nodemailer.createTransport({
             service: process.env.EMAIL_SERVICE,
             auth: {
@@ -204,7 +190,6 @@ app.post('/api/contact', async (req, res) => {
             }
         });
 
-        // Email options
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.CONTACT_EMAIL,
@@ -217,7 +202,6 @@ app.post('/api/contact', async (req, res) => {
                    <p><strong>Message:</strong> ${message}</p>`
         };
 
-        // Send email
         await transporter.sendMail(mailOptions);
         
         res.status(200).json({ message: 'Message sent successfully' });
@@ -227,7 +211,6 @@ app.post('/api/contact', async (req, res) => {
     }
 });
 
-// Authentication routes
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -250,12 +233,10 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// Catch-all route to return the main index.html file
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

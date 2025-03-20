@@ -1,12 +1,10 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-// Define the Portfolio Schema (matching your server.js schema)
 const portfolioSchema = new mongoose.Schema({
     title: { type: String, required: true },
     category: { type: String, required: true },
@@ -35,7 +33,7 @@ const sampleProjects = [
         category: "app",
         description: "Real-time weather application using weather API",
         imageUrl: "https://via.placeholder.com/600x400",
-        projectUrl: "https://github.com/WaseemSyawish/User-login-and-registration",
+        projectUrl: "https://github.com/WaseemSyawish/",
         githubUrl: "https://github.com/WaseemSyawish",
         featured: false
     },
@@ -79,10 +77,8 @@ const sampleProjects = [
 
 const addSampleData = async () => {
     try {
-        // Clear existing data
         await Portfolio.deleteMany({});
         
-        // Add new sample data
         const result = await Portfolio.insertMany(sampleProjects);
         console.log('Sample data added successfully:', result);
         
